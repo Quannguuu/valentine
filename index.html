@@ -2,7 +2,6 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Valentine Letter</title>
     <style>
@@ -51,7 +50,6 @@
             z-index: 1;
         }
 
-        /* Hiệu ứng ánh sáng */
         .glow {
             position: absolute;
             width: 400px;
@@ -59,12 +57,15 @@
             background: radial-gradient(circle, rgba(255,182,193,0.4) 0%, transparent 70%);
             border-radius: 50%;
             filter: blur(40px);
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
             animation: pulse 3s ease-in-out infinite;
         }
 
         @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.2); opacity: 0.8; }
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; }
         }
 
         .envelope-wrapper {
@@ -81,9 +82,8 @@
             position: relative;
             width: 320px;
             height: 220px;
-            background-color: #f08080;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            border-radius: 5px;
+            /* ĐÃ SỬA: Xóa background-color để không lộ góc thừa */
+            background-color: transparent; 
         }
 
         .lid {
@@ -96,7 +96,6 @@
             transform-origin: top;
             transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             z-index: 4;
-            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2));
         }
 
         .card {
@@ -112,23 +111,6 @@
             z-index: 2;
             box-shadow: 0 5px 20px rgba(0,0,0,0.15);
             overflow: hidden;
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255,182,193,0.1), transparent);
-            transform: rotate(45deg);
-            animation: shine 3s infinite;
-        }
-
-        @keyframes shine {
-            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
         }
 
         .card-content {
@@ -152,19 +134,11 @@
             transform: translateY(0);
         }
 
-        .envelope-wrapper.open .card p:nth-child(1) {
-            transition-delay: 0.3s;
-        }
-
         .envelope-wrapper.open .card p:nth-child(2) {
-            transition-delay: 0.5s;
             font-weight: bold;
             font-size: 20px;
             color: #ff6b9d;
-        }
-
-        .envelope-wrapper.open .card p:nth-child(3) {
-            transition-delay: 0.7s;
+            transition-delay: 0.2s;
         }
 
         .heart {
@@ -201,7 +175,6 @@
             z-index: 5;
         }
 
-        /* Nút click hint */
         .click-hint {
             position: absolute;
             bottom: -50px;
@@ -214,12 +187,7 @@
             color: #f08080;
             animation: bounce 2s infinite;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            transition: opacity 0.3s ease;
-        }
-
-        .envelope-wrapper.open .click-hint {
-            opacity: 0;
-            pointer-events: none;
+            white-space: nowrap;
         }
 
         @keyframes bounce {
@@ -227,45 +195,29 @@
             50% { transform: translateX(-50%) translateY(-10px); }
         }
 
-        /* Confetti khi mở */
-        .confetti {
-            position: fixed;
-            width: 10px;
-            height: 10px;
-            background: #f08080;
-            position: absolute;
-            animation: confetti-fall 3s linear;
-        }
-
-        @keyframes confetti-fall {
-            to {
-                transform: translateY(100vh) rotate(720deg);
-                opacity: 0;
-            }
-        }
-
-        /* Responsive */
+        /* Responsive cho Mobile - ĐÃ SỬA ĐỂ FIX PHẦN THỪA */
         @media (max-width: 480px) {
             .envelope {
-                width: 280px;
-                height: 190px;
+                width: 280px; /* Tăng nhẹ để số chia hết cho 2 */
+                height: 180px;
             }
             
             .lid {
                 border-left: 140px solid transparent;
                 border-right: 140px solid transparent;
-                border-top: 105px solid #f08080;
-            }
-            
-            .card {
-                width: 220px;
-                height: 150px;
-                left: 30px;
+                border-top: 100px solid #f08080;
             }
             
             .front {
                 border-left: 140px solid #f4978e;
                 border-right: 140px solid #f4978e;
+                border-top: 90px solid transparent;
+                border-bottom: 90px solid #f4978e;
+            }
+
+            .card {
+                width: 230px;
+                left: 25px;
             }
         }
     </style>
@@ -281,7 +233,7 @@
                 <div class="card">
                     <div class="card-content">
                         <p>Gửi bạn Lê Uyên giấu tên,</p>
-                        <p>Anh yêu em nhìu lémmmmmmmmmmmm</p>
+                        <p>Anh yêu em ❤️</p>
                         <p class="heart">💕</p>
                     </div>
                 </div>
@@ -296,7 +248,6 @@
         const heartsContainer = document.getElementById('hearts');
         let isOpen = false;
 
-        // Tạo trái tim rơi
         function createFloatingHeart() {
             const heart = document.createElement('div');
             heart.className = 'floating-heart';
@@ -305,45 +256,14 @@
             heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
             heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
             heartsContainer.appendChild(heart);
-
             setTimeout(() => heart.remove(), 7000);
         }
 
-        // Tạo trái tim liên tục
         setInterval(createFloatingHeart, 300);
 
-        // Tạo confetti
-        function createConfetti() {
-            const colors = ['#ff6b9d', '#f08080', '#ff1744', '#ffc1cc', '#ffb6c1'];
-            for (let i = 0; i < 50; i++) {
-                setTimeout(() => {
-                    const confetti = document.createElement('div');
-                    confetti.className = 'confetti';
-                    confetti.style.left = (Math.random() * 100) + '%';
-                    confetti.style.top = '50%';
-                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
-                    confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
-                    document.body.appendChild(confetti);
-
-                    setTimeout(() => confetti.remove(), 3000);
-                }, i * 30);
-            }
-        }
-
-        // Toggle phong bì
         envelope.addEventListener('click', function() {
             envelope.classList.toggle('open');
-            
-            if (!isOpen) {
-                createConfetti();
-                isOpen = true;
-            }
         });
-
-        // Khởi tạo một vài trái tim ban đầu
-        for (let i = 0; i < 10; i++) {
-            createFloatingHeart();
-        }
     </script>
 </body>
 </html>
